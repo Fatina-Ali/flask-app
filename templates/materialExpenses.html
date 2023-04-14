@@ -1,0 +1,66 @@
+{% extends "Dashboard.html" %} {% block title %}Home{% endblock %}
+{%block link%}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/orders.css') }}">
+{%endblock%}
+
+{% block body %}
+<main class="table">
+    <section class="table__header">
+        <h1>Orders</h1>
+        <div class="input-group">
+            <h3>Budget:</h3>
+            <p id="price"></p>
+            
+
+        </div>
+        
+    </section>
+    <section class="table__body">
+        <table>
+            <thead>
+                <tr>
+                    <th>Request Number</th>
+                    <th>Type of Request</th>
+                    <th>material Value</th>
+                </tr>
+            </thead>
+            <tbody id="full-Column">
+            </tbody>
+        </table>
+
+    </section>
+
+</main>
+<script>
+    function httpGetAsync(theUrl , callback) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("GET", theUrl, true);
+        xmlHttp.send(null);
+    }
+    window.addEventListener('load',function(){
+        httpGetAsync("http://127.0.0.1:3000/getBudget",function(response){
+            var orders=JSON.parse(response);
+            var len=orders.length
+            const container=document.getElementById("full-Column");
+            for (column = 0; column < (orders.length)-1; column++) {
+               
+                const content=`
+                <tr>
+                    <td>${orders[column] ["request_id"]}</td>
+                    <td>${orders[column]["typeOfRequest"]}</td>
+                    <td>${orders[column]["materialValue"]}</td>
+                </tr>
+                `
+                container.innerHTML+=content;
+            }
+          
+            const budqet=document.getElementById('price').innerHTML=`${orders[Number(len-1)]['Budget']}$`
+        })
+    })
+
+</script>
+{% endblock %}

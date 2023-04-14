@@ -1,0 +1,124 @@
+{% extends "Dashboard.html" %} 
+{% block link %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/types.css') }}">
+{% endblock %}
+{% block body %}
+
+<h1 class="main-title">Our Types</h1>
+<div class="main-cards" id="all-types"></div>
+
+<div class="button-finish">
+    <a  href="http://127.0.0.1:3000/addType" class="type-btn">Add a type</a>
+</div>
+
+<div id="mask" class="hidden"></div>
+<section id="modal" class="hidden">
+    <p>Do you wont support deleting the type?</p>
+    <button id="ok">Yes</button>
+    <button id="cancel">Cancel</button>
+</section>
+
+
+
+<script>
+    function httpGetAsync(theUrl, callback) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("GET", theUrl, true);
+        xmlHttp.send();
+    }
+    window.addEventListener("load", function () {
+        httpGetAsync("http://127.0.0.1:3000/getTypes", function (r) {
+            myTypes = JSON.parse(r);
+            const container=document.getElementById("all-types")
+            for (column = 0; column < myTypes.length; column++) {
+                const imagePath = myTypes[column]["image_path"];
+                const imageElement = `<img id="i${myTypes[column]["type_id"]}" src={{url_for('static',filename='')}}` + imagePath + '>';
+                const  content=`
+                <div class="type" id="D${myTypes[column]["type_id"]}">
+                    ${imageElement}
+                    <div class="type-info">
+                        <a href="#" id="n${myTypes[column]["type_id"]}">${myTypes[column]["type_name"]}</a>
+                        <button class="updateType" id="u${myTypes[column]["type_id"]}">Update Type</button>
+                        <br>
+                        <button class="deleteType" id="d${myTypes[column]["type_id"]}" > Delete Type</button>
+
+                    </div>
+
+                </div>`
+                container.innerHTML += content }
+})
+})
+
+    document.body.addEventListener("click" , event =>{
+
+
+        if(event.target.className== "updateType"){
+            let typeID= (event.target.id).slice(1);
+            var getELE = document.getElementById(`D${typeID}`) ;
+            var oldName=document.getElementById(`n${typeID}`).innerHTML ;
+            getELE.innerHTML=""
+            const buttonCreate = `
+            <form  action="/updateTypeData/${typeID}" method="POST" enctype="multipart/form-data" class="type-data" onsubmit="window.alert('The type has been successfully updated')">
+                <div>
+                    <input placeholder="Type Name" name="typeName" type="text" required class="type-text" value="${oldName}">
+                </div>
+                <input type="file" name="file" required  class="custom-file-input">
+
+                <button id="sub${typeID}" type="submit" class="input-btn"> submit </button>
+            </form>
+            `
+        
+            getELE.innerHTML = buttonCreate;
+        }
+
+
+        if(event.target.className == "deleteType"){
+            let typeID = (event.target.id).slice(1);
+            var element=event.target;
+
+            const mask=document.getElementById('mask');
+            const modal=document.getElementById('modal');
+            mask.classList.remove('hidden')
+            modal.classList.remove('hidden')
+        
+
+            document.getElementById('ok').addEventListener('click',()=>{
+                mask.classList.add('hidden');
+                modal.classList.add('hidden');
+                obj={"typeID":Number(typeID)};
+
+                fetch("http://127.0.0.1:3000/deleteType",{method:"POST" , body: JSON.stringify(obj)});
+                setTimeout(()=>{
+                    alert("The type has been successfully deleted!")
+                    window.location.reload()
+                },100)
+
+            })
+
+            document.getElementById('cancel').addEventListener('click',()=>{
+                mask.classList.add('hidden');
+                modal.classList.add('hidden');
+            })
+
+        }
+
+    })
+
+
+
+
+
+
+
+
+
+
+
+    
+</script>
+
+{% endblock %}

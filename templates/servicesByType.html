@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device, initial-scale=1.0"/>
+        <link  rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/servicesByType.css') }}">
+
+    </head>
+    <body>
+        <div class="h1"><h1 >Our Services</h1></div>
+        <div class="container" id="container"></div>
+    </body>
+    <script>
+        function postRequest(theUrl, objDATA, callback) {
+            var xm = new XMLHttpRequest();
+            xm.onreadystatechange = function () {
+                if (xm.readyState == 4 && xm.status == 200) {
+                    callback(this.responseText)
+                }
+            }
+            xm.open("POST", theUrl);
+            xm.send(JSON.stringify(objDATA))
+        }
+        window.addEventListener("load",function(){
+            typeId=`{{typeId}}`
+            obj={
+                "typeId": Number(typeId)
+            };
+            postRequest("http://127.0.0.1:3000/showservices", obj , function(res){
+                myData=JSON.parse(res);
+                for (column = 0; column < myData.length; column++) {
+                    const url = "http://127.0.0.1:3000/serviceRequest/"+`${myData[column]['service_id']}`+`/${myData[column]['title']}` ;
+                    const imagePath = myData[column]["service_img"];
+                    const imageElement = `<img class="icon" src={{url_for('static',filename='')}}` + imagePath + ` >`;
+                    if(column %2==0){
+                        var color="#595862;"
+                    }
+                    else{
+                        var color="#484662"
+                    }
+                    const content=`
+                    <div class="box" style="--clr:${color};">
+                        <div class="content">
+                           <div class="icon">${imageElement}</div>
+                            <div class="text">
+                                <h3>${myData[column]["title"]}</h3>
+                                <a href="${url}" >Request Service</a>
+                            </div>
+                        </div>
+                    </div>`
+                    const container = document.getElementById("container");
+                    container.innerHTML += content;
+                }
+            })
+        })
+    </script>
+
+</html>
+
+

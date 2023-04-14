@@ -1,0 +1,133 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins',sans-serif;
+}
+
+body{
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background:url('../images/86b6a69d84c79fd847203e05ce588d44.jpg') center / cover;
+}
+
+main.table{
+    width: 72vw;
+    height: 90vh;
+    background-color: #fff5;
+    backdrop-filter: blur(7px);
+    box-shadow: 0 .4rem .8rem #0005;
+    border-radius: .8rem;
+    overflow: hidden;
+    color: black;
+}
+.table__header{
+    width: 100%;
+    height: 10%;
+    background-color: #fff4;
+    padding: .8rem 1rem;
+}
+.table__body{
+    width: 95%;
+    max-height: calc(89% - 1.6rem);
+    background-color: #fffb;
+    margin: .8rem auto;
+    border-radius: .6rem;
+    overflow: auto;
+}
+.table__body::-webkit-scrollbar{
+    width: 0.5rem;
+    height: 0.5rem;
+}
+.table__body::-webkit-scrollbar-thumb{
+    border-radius: .5rem;
+    background-color: #0004;
+    visibility: hidden;
+}
+
+.table__body:hover:-webkit-scrollbar-thumb{
+    visibility: visible;
+}
+table,th,td{
+    border-collapse: collapse;
+    padding: 0.6rem;
+    text-align: left;
+}
+table{
+    width: 100%;
+}
+thead th{
+    position: sticky;
+    top: 0;
+    left: 0;
+    background-color: #d5d1defe;
+}
+tbody tr:nth-child(even){
+    background-color: #0000000b;
+}
+tbody tr:hover{
+    background-color: #fff6;
+}
+.status{
+    padding: .4rem 0;
+    border-radius: 2rem;
+    text-align: center;
+}
+.status.successed{
+    width: 100px;
+    background-color: #86e49d;
+    color: #006b21;
+}
+.status.cancelled{
+    width: 100px;
+    background-color: #d893a3;
+    color: #b30021;
+}
+.status.comment{
+    width: 100px;
+    background-color: #ebc474;
+}
+
+.rating{
+    display: flex;
+    padding: 0;
+    margin: 0;
+    background: none;
+    list-style-type: none;
+
+}
+.rating li{
+    list-style-type: none;
+}
+
+.rating-item{
+    cursor: pointer;
+    font-size: 2em;
+    color: yellow;
+}
+.rating-item::before{
+    content: "\2605";
+}
+
+.rating-item.active ~ .rating-item::before{
+    content: "\2606";
+}
+
+.star-item{
+
+    cursor: pointer;
+    font-size: 2em;
+    color: yellow;
+}
+
+.star-item::before{
+    content: "\2605";
+}
+@media(max-width:1000px){
+    td:not(:first-of-type){
+        min-width: 12.1rem;
+    }
+}

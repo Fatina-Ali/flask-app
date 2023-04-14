@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans&display=swap');
+*{
+
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  text-transform: capitalize;
+  text-decoration: none;
+} 
+
+.all-services{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    top: 70px;
+}
+
+.service{
+    overflow: hidden;
+    background: linear-gradient(45deg,#8EC5FC 0%,#E0C3FC 100%);
+    color: #21201e;
+    text-align: center;
+    width: 240px;
+    height: 400px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1.2rem;
+    margin: 2rem;
+
+}
+
+.service:hover img{
+    scale: 1.1;
+  }
+
+.service:hover{
+    box-shadow: 5px 15px 25px #5632FA;
+  }
+.service img{
+    height: 150px;
+    width: 110;
+    position: relative;
+    bottom: 30px;
+    margin: 1rem;
+    transition: all 0.3s;
+}
+
+
+#delete{
+    background-color: white;
+    padding: 0.7rem 2.3rem;
+    border-style:initial ;
+    border-radius: 0.5rem;
+    position: relative;
+    top: 5px;
+    cursor: pointer;
+}
+#delete:hover{
+    transform: scale(1.1);
+    opacity: 0.7;
+}
+
+#update{
+    background-color: white;
+    padding: 0.7rem 2.3rem;
+    border-style:initial ;
+    border-radius: 0.5rem;
+}
+#update:hover{
+    transform: scale(1.1);
+}
+
+.service-info h3{
+    position: relative;
+    bottom: 7px;
+    
+}
+
+.service-data{
+    position: relative;
+    bottom: 20px;
+}
+
+.hidden{
+    display: none;
+}
+#mask{
+    background: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+#modal{
+    background: #fff;
+    width: 50%;
+    padding: 24px;
+    border-radius: 4px;
+    color: red;
+    position: fixed;
+    top: 50%;
+    left: 10%;
+    right: 10%;
+    text-align: center;
+    margin: 0 auto;
+    z-index: 2;
+}
+
+.service-text{
+    width: 200px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+.custom-file-input {
+    color: transparent;
+}
+.custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+}
+.custom-file-input::before {
+    content: 'Select file';
+    color: black;
+    display: inline-block;
+    background: -webkit-linear-gradient(top, #f9f9f9, #e3e3e3);
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 0.8rem 2rem;
+    outline: none;
+    white-space: nowrap;
+    cursor: pointer;
+    text-shadow: 1px 1px #fff;
+    font-weight: 700;
+    font-size: 10pt;
+    position: relative;
+    left: 55px;
+
+}
+.custom-file-input:hover::before {
+    border-color: black;
+}
+.custom-file-input:active {
+    outline: 0;
+}
+.custom-file-input:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9); 
+} 
+
+.input-btn{
+    background-color: white;
+    padding: 0.7rem 2.3rem;
+    border-radius: 0.5rem;
+    position: relative;
+    top: 10px;
+    right: 5px;
+}
+.button-finish{
+    margin: auto;
+}
+.service-btn{
+    font-size: 1rem;
+    color: black;
+    display: inline-block;
+    text-decoration: none;
+    background:linear-gradient(45deg,#8EC5FC 0%,#E0C3FC 100%);
+    padding: 0.9rem 2.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    text-align: center;
+
+}
+.service-btn:hover{
+    transform: scale(1.1);
+}

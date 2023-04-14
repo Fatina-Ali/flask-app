@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device, initial-scale=1.0"/>
+        <link rel= "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel= "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link  rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/userForm.css') }}">
+        <title>service information</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="title">Type Information</div>
+                <form action="/input.Data.OF.theService" method="POST" enctype="multipart/form-data" onsubmit="window.alert('The service has been successfully added')">
+                    <div class="user-details">
+                        <div class="input-box">
+                            <span class="details" for="serviceName">Service Name</span>
+                            <input type="text" placeholder="Enter Service Name" required name="serviceName" id="serviceName">
+                        </div>
+
+                        <div class="input-box">
+                            <span class="details" for="number_of_beneficiaries">Number of Beneficiaries</span>
+                            <input type="text" placeholder="Enter Number of Beneficiaries" required name="number_of_beneficiaries" id="number_of_beneficiaries">
+                        </div>
+                        <div class="input-box">
+                            <span class="details" for="price">Service Price </span>
+                            <input type="number" placeholder="Enter Service Price " required name="price" id="price">
+                        </div>
+                        <div >
+                            <span for="imagePath">Suitable Image</span>
+                            <input type="file" name="file" required id="imagePath" class="custom-file-input">
+                        </div>
+                    </div>
+                    <div >
+                        <label for="select">Type of Service:</label>
+                  
+                        <div class="select">
+                            <select id="select" name="select" required>
+                                <option>choose a type of service</option>
+                            </select>
+                        </div>
+                    
+                    </div>
+
+                    
+                    <div class="button">
+                        <input type="submit" value="Register" id="bt">
+                    </div>
+                   
+                </form>
+            </div>
+        </div>
+        <script>
+            function httpGetAsync(theUrl, callback) {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function () {
+                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                        callback(xmlHttp.responseText);
+                }
+                xmlHttp.open("GET", theUrl, true);
+                xmlHttp.send(null);
+            }
+
+
+            window.addEventListener("load",function(){
+                httpGetAsync("http://127.0.0.1:3000/getTypes", function (r) {
+                    data = JSON.parse(r);
+
+                    const contain = document.getElementById("select");
+
+                    for (column = 0; column < data.length; column++) {
+                        const createOneSelect=`
+                        <option value="select${data[column]["type_id"]}">
+                            ${data[column]["type_name"]}
+                        </option>`
+                        contain.innerHTML +=createOneSelect;
+                    
+                    }
+
+                })
+            })
+        </script>
+    </body>
+</html>
+ 
+
+
+
+

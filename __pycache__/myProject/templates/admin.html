@@ -1,0 +1,58 @@
+{% extends "base.html" %} {% block title %}Admin{% endblock %}
+
+
+{% block body %}
+<div style="  display: flex;flex-wrap: wrap; position:absolute;left:50px" id="div1"></div>
+<button style="position: absolute; top:600px " id="addRES">إضافة خدمة</button>
+<script>
+    function httpGetAsync(theUrl, callback) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("GET", theUrl, true);
+        xmlHttp.send();
+    }
+
+    window.addEventListener("load", function () {
+        httpGetAsync("http://127.0.0.1:3000/getDATA", function (r) {
+            data = JSON.parse(r)
+
+            for (column = 0; column < data.length; column++) {
+                createDIV = document.createElement("div");
+                createDIV.className = "div" + data[column]["services_id"];
+                createDIV.style = "width:200px"
+                createH4 = document.createElement("h4");
+                createH4.appendChild(document.createTextNode(data[column]["services_id"] + ":رقم الخدمة"))
+                createH3 = document.createElement("h3");
+                createH3.appendChild(document.createTextNode(data[column]["title"]))
+                createP = document.createElement("p");
+                createP.appendChild(document.createTextNode(":عدد المستفيدين"))
+                num=document.createElement("input")
+                num.setAttribute("value", data[column]["number_of_beneficiaries"])
+                num.setAttribute("readonly",true)
+
+
+                createBUTupdate = document.createElement("a");
+                createBUTupdate.setAttribute("href", "update/" + `${data[column]["services_id"]}`)
+                createBUTupdate.appendChild(document.createTextNode("تعديل الخدمة"))
+                createBUTdelete = document.createElement("a");
+                createBUTdelete.setAttribute("href", "delete/" + `${data[column]["services_id"]}`)
+                createBUTdelete.appendChild(document.createTextNode("حذف الخدمة"))
+                createDIV.appendChild(createH4); createDIV.appendChild(createH3); createDIV.appendChild(createP); createDIV.appendChild(num);
+                createDIV.appendChild(document.createElement("br"));
+                createDIV.appendChild(createBUTupdate); createDIV.appendChild(document.createElement("br")); createDIV.appendChild(createBUTdelete)
+                document.getElementById("div1").append(createDIV)
+            }
+        })
+    })
+    document.getElementById("addRES").onclick=function(){
+        
+    }
+
+
+
+</script>
+
+{% endblock %}

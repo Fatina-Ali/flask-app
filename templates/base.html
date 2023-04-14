@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device, initial-scale=1.0"/>
+        <link rel= "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel= "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link  rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">
+        <link rel= "stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <title>Home</title>
+    </head>
+    <body>
+        <!-- start header -->
+        <header>
+            <a href="#" class="logo">Al-Ataa</a>
+            <input type="checkbox" id="menu-bar">
+            <label for="menu-bar"> <i class="fa-solid fa-bars"></i></label>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="http://127.0.0.1:3000/">Home</a></li>
+                    <li><a href="http://127.0.0.1:3000/LogIN">Sign in</a></li>
+                    <li><a href="http://127.0.0.1:3000/DonationPage" id="action_btn" >To Donate</a></li>
+                </ul>
+            </nav>
+        </header>
+        <!-- end header -->
+
+
+        
+        <!-- start landing -->
+        <div class="landing">
+            <div class="cont">
+                <div class="text">
+                    <h1>Al-Ataa</h1>
+                    <p>Help anyone, anywhere</p>
+
+                </div>
+                <div class="image">
+                    <img src="{{url_for('static',filename='images/animation.png')}}">
+
+                </div>
+
+            </div>
+            <a class="go-down">
+                <i class="fas fa-angle-double-down fa-2x"></i>
+            </a>
+
+        </div>
+        <!-- end landing -->
+
+        {% block body %}
+        {% endblock %}
+        <!-- start footer -->
+        <footer>
+            <div class="footer-content">
+                <h3>Al-Ataa Charity Association</h3>
+                <p></p>
+                <ul class="socials">
+                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                    <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                    <li><a href="#"><i class="fa fa-linkedin-square"></i></a></li>
+
+                </ul>
+            </div>
+            <div class="footer-bottom">
+                <p>Giving to others will not take away from what you have <span>but will in fact add to your life</span></p>
+
+            </div>
+        </footer>
+
+        <!-- end footer -->
+
+
+
+    </body>
+</html>
+

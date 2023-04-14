@@ -1,0 +1,163 @@
+{% extends "Dashboard.html" %} {% block title %}Home{% endblock %}
+{%block link%}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/orders.css') }}">
+{%endblock%}
+
+{% block body %}
+<main class="table">
+    <section class="table__header">
+        <h1>Donation Orders</h1>
+    </section>
+    <section class="table__body">
+        <table>
+            <thead>
+                <tr>
+                    <th>Request Number</th>
+                    <th>User Name</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>address</th>
+                    <th>Order Date</th>
+                    <th>Amount Paid</th>
+                    <th>Order Status</th>
+                    <th>Delete</th>
+                    
+
+                </tr>
+            </thead>
+            <tbody id="full-Column">
+            </tbody>
+        </table>
+
+    </section>
+
+</main>
+<div id="mask" class="hidden"></div>
+<section id="modal" class="hidden">
+    <p>Do you wont support deleting the Order?</p>
+    <button id="ok">Yes</button>
+    <button id="cancel">Cancel</button>
+</section>
+<script>
+    function httpGetAsync(theUrl , callback) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("GET", theUrl, true);
+        xmlHttp.send(null);
+    }
+    window.addEventListener('load',function(){
+        httpGetAsync("http://127.0.0.1:3000/getDonationOrders",function(response){
+            var orders=JSON.parse(response);
+            const container=document.getElementById("full-Column");
+            for (column = 0; column < orders.length; column++) {
+                
+                if(orders[column]["order_status"]=='pending'){
+
+                    var status="status comment";
+
+                    var list=`
+                    <li class="cancel-select" id="${orders[column]["request_id"]}"> 
+                        <button class="bad" id="${orders[column]["request_id"]}">cancel</button> 
+                    </li>
+                    <li class="successfully-select" id="${orders[column]["request_id"]}"> 
+                        <button class="good" id="${orders[column]["request_id"]}">successfully</button> 
+                    </li>`;
+                }
+                if(orders[column]["order_status"] == 'successfully'){
+                    var status="status successed";
+                }
+                if(orders[column]["order_status"] =='cancelled'){
+                    var status="status cancelled";
+                }
+                if(list!=undefined){
+                    var main_list=`
+                    <ul class="statuses">
+                        ${list}
+                    </ul>`
+                }
+                if(list==undefined){
+                    var main_list=``
+                }
+              
+
+                const content=`
+                <tr>
+                    <td>${column +1}</td>
+                    <td>${orders[column]["userName"]}</td>
+                    <td>${orders[column]["phone"]}</td>
+                    <td>${orders[column]["Email"]}</td>
+                    <td>${orders[column]["address"]}</td>
+                    <td>${orders[column]["orderDate"]}</td>
+                    <td>${orders[column]["amountPaid"]}$</td>
+                    <td class="st">
+                        <p class="${status}"> ${orders[column]["order_status"]}</p>
+                        ${main_list}
+                    </td>
+                    <td class="ff" id="${orders[column] ["request_id"]}">
+                        
+                        <button class="status delete" id="${orders[column] ["request_id"]}">Delete</button>
+
+                    </td>
+                  
+
+                </tr>
+                `
+                container.innerHTML+=content;
+
+            }
+        })
+    })
+    document.body.addEventListener("click" , function(e){
+        if(e.target.className=="bad" | e.target.className=='cancel-select'){
+            
+            obj={
+                'requestId':Number(e.target.id),
+                'newStatus':'cancelled'
+            }
+            fetch("http://127.0.0.1:3000/updateStatusdonationOrders",{method:"POST" , body : JSON.stringify(obj)})
+            window.location.reload()
+            
+        }
+
+        if(e.target.className=="good" | e.target.className=='successfully-select'){
+            obj={
+                'requestId':Number(e.target.id),
+                'newStatus':'successfully'
+            }
+            fetch("http://127.0.0.1:3000/updateStatusdonationOrders",{method:"POST" , body : JSON.stringify(obj)})
+            window.location.reload()
+       
+        }
+        if(e.target.className=='status delete' | e.target.className=='ff'){
+            order_id=Number(e.target.id);
+            var element=e.target;
+
+            var mask=document.getElementById('mask');
+            var modal=document.getElementById('modal');
+            mask.classList.remove('hidden');
+            modal.classList.remove('hidden');
+
+            document.getElementById('ok').addEventListener('click',()=>{
+                mask.classList.add('hidden');
+                modal.classList.add('hidden');
+                object={'id':order_id}
+                fetch("http://127.0.0.1:3000/deleteDonationOrder",{method:"POST" , body : JSON.stringify(object)})
+                setTimeout(()=>{
+                    alert('The order has been successfully deleted')
+                    window.location.reload()
+                },100)
+
+            })
+
+            document.getElementById('cancel').addEventListener('click',()=>{
+                mask.classList.add('hidden');
+                modal.classList.add('hidden');
+            })
+            
+        }
+    })
+</script>
+{% endblock %}

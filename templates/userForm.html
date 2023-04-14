@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device, initial-scale=1.0"/>
+        <link rel= "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel= "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link  rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/userForm.css') }}">
+        <title>personal information</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="details" style="position:relative;bottom:10px;font-size: 20px;width: 400px;height: 35px;color: black;">The Service : {{serviceName}}</div>
+            <div class="title">Personal Information</div>
+         
+            <form>
+                <div class="user-details">
+                    <div class="input-box">
+                        <span class="details">Full Name</span>
+                        <input type="text" placeholder="Enter your name" required name="name" id="name">
+
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Email</span>
+                        <input type="email" placeholder="Enter your Email" required name="email" id="email">
+
+                    </div>
+                    <div class="input-box">
+                        <span class="details">phone Number</span>
+                        <input type="number" placeholder="Enter your Number" required name="phone" id="phone">
+
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Address</span>
+                        <input type="text" placeholder="Enter your address" required name="address" id="address">
+
+                    </div>
+
+                </div>
+                <div class="button">
+                    <input type="button" value="Register" id="bt">
+                </div>
+            </form>
+        </div>
+        <script>
+            function postRequest(theUrl, objDATA, callback) {
+                var xm = new XMLHttpRequest();
+                xm.onreadystatechange = function () {
+                    if (xm.readyState == 4 && xm.status == 200) {
+                        callback(this.responseText)
+                    }
+                }
+                xm.open("POST", theUrl);
+                xm.send(JSON.stringify(objDATA))
+            }
+            window.onload=function(){
+                service_id=`{{service_id}}`
+            }
+            document.getElementById('bt').onclick=function(){
+                name=document.getElementById('name').value;
+                email=document.getElementById('email').value;
+                phone=document.getElementById('phone').value;
+                address=document.getElementById('address').value;
+                if(name!='' && email!='' && address!='' && phone!=''){
+                    if(email.indexOf('@') == -1 | email.length<8){
+                        alert('The email is invalid ')
+                        document.getElementById('email').value=''
+                    }
+                    if (phone.length<10){
+                        alert('The phone is invalid')
+                        document.getElementById('phone').value=''
+                    }
+                    if(address.length<8){
+                        alert('The address is invalid')
+                        document.getElementById('address').value=''
+                    }
+                    if(email.indexOf('@') != -1 & email.length>=8 & phone.length>=10 & address.length>=8){
+                        obj={
+                            'name':name,
+                            'email':email,
+                            'phone':Number(phone),
+                            'address':address
+                        }
+                        postRequest(`http://127.0.0.1:3000/addUSER/${service_id}`,obj,function(r){
+                            if(r=='invalid name'){
+                                alert('invalid name,Enter name please')
+                            }
+                            else{
+                                alert('Your request has been successfully registered')
+                                window.open('http://127.0.0.1:3000/')
+                            }
+                            
+                        })
+                        }
+                    }
+                else{
+                    alert('Please fill in all the fields !')
+
+                }
+            }
+
+        </script>
+    </body>
+</html>

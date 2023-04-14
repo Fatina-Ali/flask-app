@@ -1,0 +1,115 @@
+{% extends "Dashboard.html" %} 
+{% block link %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/services.css') }}">
+{% endblock %}
+{% block body %}
+
+<h1 class="main-title">Our Services</h1>
+<div class="main-cards" id="all-services"></div>
+
+<div class="button-finish">
+    <a href="http://127.0.0.1:3000/serviceAddPage" class="service-btn">Add a service</a>
+</div>
+<div id="mask" class="hidden"></div>
+<section id="modal" class="hidden">
+    <p>Do you wont support deleting the service?</p>
+    <button id="ok">Yes</button>
+    <button id="cancel">Cancel</button>
+</section>
+<script>
+    function httpGetAsync(theUrl, callback) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                callback(xmlHttp.responseText);
+            }
+        xmlHttp.open("GET", theUrl, true);
+        xmlHttp.send();
+    }
+    window.onload= function () {
+        httpGetAsync("http://127.0.0.1:3000/getDATA", function (d) {
+            data = JSON.parse(d);
+            const container=document.getElementById("all-services");
+            for (column = 0; column < data.length; column++) {
+                const imagePath = data[column]["service_img"];
+                const imageElement = `<img id="im${data[column]['service_id']}" class="imgService" src={{url_for('static',filename='')}}` + imagePath + ` >`;
+                const content = `
+                <div id="Div${data[column]["service_id"]}"  class="service">
+                    ${imageElement} 
+                    <div class="service-info">
+                        <h1 style="position:relative;bottom:35px;font-size:25px" id="name${data[column]["service_id"]}">${data[column]["title"]}</h1>
+                        <h3 style="font-size:15px;position:relative;bottom:25px" >Number of Beneficiaries</h3>
+                        <h3 style="position:relative;bottom:15px" id="numb${data[column]["service_id"]}">${data[column]["number_of_beneficiaries"]}</h3>
+                        <h3 id="pr${data[column]["service_id"]}">price:${data[column]["price"]}$</h3>
+                        <button id="update" class="u${data[column]["service_id"]}">Update Service</button>
+                        <button id="delete" class="d${data[column]["service_id"]}">Delete Service</button>
+                    </div>
+                </div>
+                `
+                
+                container.innerHTML += content;
+            }
+
+
+        })
+    }
+
+
+    document.body.addEventListener("click", e => {
+        if (e.target.id == "update") {
+            let w = (e.target.className).slice(1);
+            var getELE = document.getElementById(`Div${w}`);
+            var oldName=document.getElementById(`name${w}`).innerHTML;
+            var oldNumber=document.getElementById(`numb${w}`).innerHTML;
+            var oldPrice=document.getElementById(`pr${w}`).innerHTML.slice(6,-1);
+            getELE.innerHTML = '';
+            let formNewFormation=`
+            <form action="/updateServiceData/${w}" method="POST" enctype="multipart/form-data" class="service-data" 
+            onsubmit="window.alert('The service has been successfully updated')">
+                <input placeholder="Service Name" name="serviceName" type="text" required class="service-text" value="${oldName}">
+                <input placeholder="Number of Beneficiaries" name="number_of_beneficiaries" type="number" 
+                required class="service-text" value="${oldNumber}">
+                <input placeholder="Enter service price" name="price" type="number" required class="service-text" value="${oldPrice}">
+                <input type="file" name="file" required class="custom-file-input" >
+                <button id="sub${w}" type="submit" class="input-btn"> submit </button>
+            </form>
+            `  
+            getELE.innerHTML += formNewFormation;
+        }
+
+        if (e.target.id == "delete") {
+            var r = (e.target.className).slice(1);
+            var element=e.target;
+
+            const mask=document.getElementById('mask');
+            const modal=document.getElementById('modal');
+            mask.classList.remove('hidden')
+            modal.classList.remove('hidden')
+
+            
+            document.getElementById('ok').addEventListener('click',()=>{
+                mask.classList.add('hidden');
+                modal.classList.add('hidden');
+                objeCT = { "serID": Number(r) };
+
+                fetch("http://127.0.0.1:3000/deleteSER", { method: "POST", body: JSON.stringify(objeCT) });
+                setTimeout(()=>{
+                    alert("The service has been successfully deleted!")
+                    window.location.reload()
+                },100)
+
+            })
+
+            document.getElementById('cancel').addEventListener('click',()=>{
+                mask.classList.add('hidden');
+                modal.classList.add('hidden');
+            })
+        }
+
+
+
+        })
+
+
+</script>
+{% endblock %}

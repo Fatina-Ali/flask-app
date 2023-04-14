@@ -1,0 +1,44 @@
+{% extends "base.html" %} 
+{% block body %}
+<!-- start cards -->
+<section class="types">
+    <h2 class="ourTypes">Types Our Services</h2>
+    <div class="all-types" id="all-types">
+    </div>
+</section>
+<!-- end cards -->
+<script>
+    function httpGetAsync(theUrl , callback) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("GET", theUrl, true);
+        xmlHttp.send(null);
+    }
+    // show types
+    window.addEventListener("load",function(){
+        httpGetAsync("http://127.0.0.1:3000/getTypes", function (r) {
+            data = JSON.parse(r);
+            const container=document.getElementById("all-types")
+            for (column = 0; column < data.length; column++) {
+                const imagePath= data[column]["image_path"] ;
+                const imageElement = `<img src={{url_for('static',filename='')}}` + imagePath + ` >` ;
+                const content=`
+                <div class="type">
+                    ${imageElement}
+                    <div class="type-info">
+                        <a href="/servicesPage/${data[column]['type_id']}" class="type-btn">${data[column]["type_name"]}</a>
+                    </div>
+
+                </div>`
+                container.innerHTML+=content
+                
+            }
+        })
+
+        
+    })
+</script>
+{% endblock %}
